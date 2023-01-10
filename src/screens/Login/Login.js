@@ -13,7 +13,7 @@ import { styles } from './styles';
 import IconFA5 from 'react-native-vector-icons/FontAwesome5'
 import IconMUI from 'react-native-vector-icons/MaterialIcons'
 import { FORGOT_PASSWORD, HOME, REGISTER } from '../../constants/routes';
-import { gradientForm } from '../../constants/colors';
+import { gradientForm, main, white } from '../../constants/colors';
 import { NativeBaseProvider, Link, Input, Stack } from 'native-base'
 import { useDispatch } from 'react-redux';
 import { userLogin } from '../../services/AuthServices';
@@ -126,7 +126,7 @@ function Login({ navigation }) {
 
                             <View style={styles.loginBtnWrapper}>
                                 <LinearGradient
-                                    colors={[gradientForm, '#f5a524']}
+                                    colors={[main, main]}
                                     style={styles.linearGradient}
                                     start={{ y: 0.0, x: 0.0 }}
                                     end={{ y: 1.0, x: 0.0 }}>

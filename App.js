@@ -1,15 +1,17 @@
 import * as React from 'react';
-import {SafeAreaView, Text} from 'react-native';
-import {DrawerActions, NavigationContainer} from '@react-navigation/native';
-
+import { NavigationContainer } from '@react-navigation/native';
 import AuthNavigator from './src/navigations/AuthNavigator';
+import { Provider } from 'react-redux';
+import { store } from './src/redux/store';
 
 export default function App() {
   // isAuthenticated = is...
   return (
-    <NavigationContainer>
-      {/* {isAuthenticated ? AuthNavigator : DrawerNavigator } */}
-      <AuthNavigator />
-    </NavigationContainer>
+    <Provider store={store}>
+      <NavigationContainer>
+        <AuthNavigator />
+      </NavigationContainer>
+    </Provider>
+
   );
 }

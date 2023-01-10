@@ -1,12 +1,11 @@
-export default {
-  gradientForm: '#A376F1',
-  primary: '#7d5fff',
-  white: '#FFFFFF',
-  dark: '#444',
-  bgColor: '#82ccdd',
-  warning: '#f0d500',
-  danger: '#FF0D0E',
-  gray: '#666666',
-  grayLight: '#ccc',
-  black: '#0a0a0a',
-};
+export const gradientForm= '#A376F1';
+export const  primary= '#7d5fff';
+export const  white= '#FFFFFF';
+export const  dark= '#444';
+export const  bgColor= '#82ccdd';
+export const  warning= '#f0d500';
+export const  danger= '#FF0D0E';
+export const  gray= '#666666';
+export const  grayLight= '#ccc';
+export const  black= '#0a0a0a';
+export const main = '#f5a524';
