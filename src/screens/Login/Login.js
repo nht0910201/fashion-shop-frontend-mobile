@@ -2,25 +2,34 @@ import React, { useState } from 'react';
 import {
     Text,
     View,
-    TextInput,
     SafeAreaView,
     TouchableOpacity,
     Pressable,
+    KeyboardAvoidingView,
+    Platform
 } from 'react-native';
 import { ALERT_TYPE, AlertNotificationRoot, Toast, Dialog } from 'react-native-alert-notification';
 import LinearGradient from 'react-native-linear-gradient';
 import { styles } from './styles';
 import IconFA5 from 'react-native-vector-icons/FontAwesome5'
+import IconFA from 'react-native-vector-icons/FontAwesome'
 import IconMUI from 'react-native-vector-icons/MaterialIcons'
-import { FORGOT_PASSWORD, HOME, REGISTER } from '../../constants/routes';
+import { BOTTOM_TABS, FORGOT_PASSWORD, HOME, REGISTER } from '../../constants/routes';
 import { gradientForm, main, white } from '../../constants/colors';
-import { NativeBaseProvider, Link, Input, Stack } from 'native-base'
+import { NativeBaseProvider, Image, Input, Stack, Button } from 'native-base'
 import { useDispatch } from 'react-redux';
 import { userLogin } from '../../services/AuthServices';
 import * as authAction from '../../redux/authSlice'
+import Error from '../../components/Error';
+import Warning from '../../components/Warning';
+import SuccessNavigate from '../../components/SuccessNavigate';
+import Loading from '../../components/Loading';
+import { useNavigation } from '@react-navigation/native';
 
-function Login({ navigation }) {
+function Login() {
+    const navigation = useNavigation()
     const dispatch = useDispatch()
+    const [loading,setLoad] = useState(false)
     const [show, setShow] = useState(false);
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
@@ -35,27 +44,21 @@ function Login({ navigation }) {
         setOtp({ ...otpInput, otp: e })
     }
     const login = async ({ username, password, otp }) => {
+        setLoad(true)
         let res = await userLogin({ username, password, otp })
         if (res.data.success) {
             if (res.data.data.role === 'ROLE_ADMIN' || res.data.data.role === 'ROLE_STAFF') {
-                Dialog.show({
-                    type: ALERT_TYPE.WARNING,
-                    title: 'Waring',
-                    textBody: 'Tài khoản không có quyền truy cập',
-                    button:'Đóng'
-                })
+                setLoad(false)
+                Warning('Thông báo', 'Tài khoản không có quyền truy cập')
             } else {
                 if (res.data.data.accessToken === 'unverified') {
-                    Dialog.show({
-                        type: ALERT_TYPE.WARNING,
-                        title: 'Waring',
-                        textBody: 'Vui lòng điền mã xác minh được gửi về email để hoàn thành xác thực!',
-                        button:'Đóng'
-                    })
+                    setLoad(false)
+                    Warning('Vui lòng xác thực', 'Vui lòng điền mã xác minh được gửi về email để hoàn thành xác thực')
                     setOtp({ ...otp, hidden: false })
                 } else {
                     await dispatch(authAction.login(res.data));
-                    navigation.navigate(HOME)
+                    setLoad(false)
+                    SuccessNavigate('Đăng Nhập Thành Công', 'Vui lòng nhấn OK', navigation, BOTTOM_TABS)
                 }
             }
         }
@@ -68,12 +71,8 @@ function Login({ navigation }) {
                 }
                 message = "OTP không chính xác!";
             }
-            Dialog.show({
-                type: ALERT_TYPE.DANGER,
-                title: 'Error',
-                textBody: message,
-                button:'Đóng'
-            })
+            setLoad(false)
+            Error(message)
         }
     }
     const handleLogin = () => {
@@ -82,57 +81,68 @@ function Login({ navigation }) {
     }
     return (
         <NativeBaseProvider>
+            <Loading loading={loading}/>
             <AlertNotificationRoot>
-                <SafeAreaView style={styles.main}>
-                    <View style={styles.container}>
-                        <View style={styles.wFull}>
-                            <View style={styles.row}>
-                                <Text style={styles.brandName}>REALEST</Text>
-                            </View>
+                <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+                    <SafeAreaView style={styles.container}>
+                        <View style={styles.header}>
+                            <Image size='xl'
+                                source={require('../../assets/REALSTYLE.png')}
+                                alt="REALEST-FASHION-SHOP"
+                            />
+                        </View>
+                        <Stack space={1} style={styles.content}>
                             <Text style={styles.loginContinueTxt}>ĐĂNG NHẬP</Text>
-                            <Stack space={2}>
+                            <Input
+                                InputLeftElement={<IconMUI name="email" size={25} style={{ marginLeft: 10, padding: 5 }} color="muted.400" />}
+                                variant={'rounded'}
+                                style={{ margin: 5 }}
+                                size={'2xl'}
+                                placeholder="Tên đăng nhập"
+                                value={username}
+                                onChangeText={handleChangeUsername}
+                            />
+                            <Input
+                                type={show ? "text" : "password"}
+                                InputLeftElement={<IconFA5 name="unlock" size={25} style={{ marginLeft: 10, padding: 5 }} color="muted.400" />}
+                                InputRightElement={password.length === 0 ? '' :
+                                    <Pressable onPress={() => setShow(!show)}>
+                                        <IconMUI name={show ? "visibility" : "visibility-off"} size={20} style={{ marginRight: 10, padding: 5 }} color="muted.400" />
+                                    </Pressable>}
+                                variant={'rounded'}
+                                style={{ margin: 5 }}
+                                size={'2xl'}
+                                placeholder="Mật khẩu"
+                                value={password}
+                                onChangeText={handleChangePassword}
+                            />
+                            {!otpInput.hidden ?
                                 <Input
-                                    InputLeftElement={<IconMUI name="email" size={25} style={{ marginLeft: 10, padding: 5 }} color="muted.400" />}
+                                    InputLeftElement={<IconMUI name="verified" size={25} style={{ marginLeft: 10, padding: 5 }} color="muted.400" />}
+                                    placeholder="OTP"
+                                    value={otpInput.otp}
+                                    onChangeText={onChangeOtpHandle}
                                     variant={'rounded'}
-                                    style={{ margin: 5 }}
                                     size={'2xl'}
-                                    placeholder="Tên đăng nhập"
-                                    value={username}
-                                    onChangeText={handleChangeUsername}
-                                />
-                                <Input
-                                    type={show ? "text" : "password"}
-                                    InputLeftElement={<IconFA5 name="unlock" size={25} style={{ marginLeft: 10, padding: 5 }} color="muted.400" />}
-                                    InputRightElement={password.length === 0 ? '' :
-                                        <Pressable onPress={() => setShow(!show)}>
-                                            <IconMUI name={show ? "visibility" : "visibility-off"} size={20} style={{ marginRight: 10, padding: 5 }} color="muted.400" />
-                                        </Pressable>}
-                                    variant={'rounded'}
                                     style={{ margin: 5 }}
-                                    size={'2xl'}
-                                    placeholder="Mật khẩu"
-                                    value={password}
-                                    onChangeText={handleChangePassword}
-                                />
-                                {!otpInput.hidden ?
-                                    <TextInput
-                                        style={styles.input}
-                                        placeholder="OTP"
-                                        value={otpInput.otp}
-                                        onChangeText={onChangeOtpHandle}
-                                    /> :
-                                    <></>}
-                            </Stack>
-
+                                /> :
+                                <></>}
+                            <TouchableOpacity
+                                onPress={() =>
+                                    navigation.navigate(FORGOT_PASSWORD, {
+                                        userId: 'X0001',
+                                    })
+                                }
+                                style={{ marginTop: 10 }}>
+                                <Text style={styles.forgotPassText}>Quên mật khẩu?</Text>
+                            </TouchableOpacity>
                             <View style={styles.loginBtnWrapper}>
                                 <LinearGradient
                                     colors={[main, main]}
                                     style={styles.linearGradient}
                                     start={{ y: 0.0, x: 0.0 }}
                                     end={{ y: 1.0, x: 0.0 }}>
-                                    {/******************** LOGIN BUTTON *********************/}
                                     <TouchableOpacity
-                                        // onPress={() => navigation.navigate(HOME)}
                                         onPress={handleLogin}
                                         activeOpacity={0.7}
                                         style={styles.loginBtn}>
@@ -141,43 +151,30 @@ function Login({ navigation }) {
                                 </LinearGradient>
                             </View>
 
-                            {/***************** FORGOT PASSWORD BUTTON *****************/}
-                            <TouchableOpacity
-                                onPress={() =>
-                                    navigation.navigate(FORGOT_PASSWORD, {
-                                        userId: 'X0001',
-                                    })
-                                }
-                                style={styles.forgotPassBtn}>
-                                <Text style={styles.forgotPassText}>Quên mật khẩu?</Text>
-                            </TouchableOpacity>
-                            <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: 10 }}>
-                                <Text style={styles.footerText}> Don't have an account? </Text>
-                                {/******************** REGISTER BUTTON *********************/}
+                        </Stack>
+                        <View style={styles.other}>
+                            <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'flex-start', marginTop: 5 }}>
+                                <Text style={styles.footerText}> Chưa có tài khoản ? </Text>
                                 <TouchableOpacity
                                     onPress={() => navigation.navigate(REGISTER)}>
                                     <Text style={styles.signupBtn}>Đăng ký</Text>
                                 </TouchableOpacity>
                             </View>
-
+                            <Stack direction={{
+                                base: "row",
+                            }} space={1}>
+                                <Button borderRadius={'3xl'} leftIcon={<IconFA name="google" size={25} />} colorScheme={'error'} size={'lg'}>
+                                    Tiếp tục với Google
+                                </Button>
+                                <Button borderRadius={'3xl'} leftIcon={<IconFA name="facebook-square" size={25} />} colorScheme={'darkBlue'} size={'lg'}>
+                                    Tiếp tục với Facebook
+                                </Button>
+                            </Stack>
                         </View>
-                        <View style={styles.footer}>
-                            <Text style={styles.footerText}> Đăng nhập với </Text>
-                            <Link _text={{ color: "red.600" }}>
-                                Google
-                            </Link>
-                            <Text style={styles.footerText}> hoặc </Text>
-                            <Link _text={{ color: "blue.600" }}>
-                                Facebook
-                            </Link>
-                        </View>
-
-                    </View>
-                </SafeAreaView>
+                    </SafeAreaView>
+                </KeyboardAvoidingView>
             </AlertNotificationRoot>
-
         </NativeBaseProvider>
-
     )
 }
 

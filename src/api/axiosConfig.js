@@ -10,8 +10,8 @@ const axiosCountry = axios.create({
     baseURL:API_ADDRESS,
 })
 axiosConfig.interceptors.request.use(
-    function (req) {
-        const token = getToken()
+    async function (req) {
+        const token = await getToken()
         if (token) 
             req.headers['authorization'] =`Bearer ${token}` ;
         return req;

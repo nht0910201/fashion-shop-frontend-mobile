@@ -5,10 +5,21 @@ import Home from '../screens/Home';
 import Profile from '../screens/Profile';
 import HomeIcon from 'react-native-vector-icons/FontAwesome5'
 import UserIcon from 'react-native-vector-icons/FontAwesome5'
+import { TouchableOpacity } from 'react-native';
+import { useState, useEffect } from 'react';
+import { getUser } from '../utils/userHandle';
 
 const Tab = createBottomTabNavigator();
 
 function BottomTabNavigator() {
+  const [user, setUser] = useState()
+  useEffect(() => {
+    async function getAuth() {
+      const auth = await getUser();
+      setUser(auth)
+    }
+    getAuth()
+  }, [])
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -30,7 +41,8 @@ function BottomTabNavigator() {
       })}
     >
       <Tab.Screen name={HOME} component={Home} />
-      <Tab.Screen name={PROFILE} component={Profile} />
+      <Tab.Screen name={PROFILE} component={Profile} options={{}}
+      />
     </Tab.Navigator>
   );
 }

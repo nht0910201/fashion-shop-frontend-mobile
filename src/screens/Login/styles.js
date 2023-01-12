@@ -2,53 +2,40 @@ import { StyleSheet } from "react-native";
 import { gray, grayLight, primary, white } from "../../constants/colors";
 
 export const styles = StyleSheet.create({
-    main: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        padding: 16,
-    },
     container: {
-        flex: 1,
-        padding: 10,
-        width: '100%',
-        position: 'relative',
-        alignItems: 'center',
-        justifyContent: 'center',
+        flex:1,
+        paddingHorizontal:5,
+        backgroundColor:white
     },
     wFull: {
-        flex:1,
         width: '100%',
     },
-    row: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center',
-        marginBottom: 20,
+    header: {
+        flex:1,
+        justifyContent:'center',
+        alignItems:'center',
     },
-    brandName: {
-        fontSize: 42,
-        textAlign: 'center',
-        fontWeight: 'bold',
-        color: '#f5a524',
-        opacity: 0.9,
+    content:{
+        flex:3,
+        justifyContent:'flex-start',
+        // alignItems:'center'
+    },
+    other:{
+        flex:3,
+        justifyContent:'center',
+        alignItems:'center',
+        marginTop:4
     },
     loginContinueTxt: {
-        fontSize: 21,
+        fontSize: 28,
         textAlign: 'center',
-        color: gray,
-        marginBottom: 16,
+        color: '#f5a524',
         fontWeight: 'bold',
     },
-    input: {
-        // marginTop:10,
-        // borderRadius: 5,
-        // height: 45,
-    },
+    
     // Login Btn Styles
     loginBtnWrapper: {
         height: 55,
-        marginTop: 12,
         shadowColor: '#000',
         shadowOffset: {
             width: 0,
@@ -71,35 +58,27 @@ export const styles = StyleSheet.create({
     },
     loginText: {
         color: white,
-        fontSize: 16,
-        fontWeight: '400',
+        fontSize: 20,
+        fontWeight: 'bold',
     },
     forgotPassText: {
+        fontSize:20,
         color: 'red',
         textAlign: 'center',
         fontWeight: 'bold',
-        marginTop: 15,
-    },
-    // footer
-    footer: {
-        position: 'absolute',
-        bottom:1,
-        textAlign: 'center',
-        flexDirection: 'row',
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    footerText: {
-        color: gray,
-        fontWeight: 'bold',
     },
     signupBtn: {
+        fontSize:20,
         color: '#f5a524',
         fontWeight: 'bold',
+        marginTop:10
     },
-    // utils
-
-    mr7: {
-        marginRight: 7,
+    footerText:{
+        fontSize:20,
+        marginBottom:10,
+        marginTop:10
     },
+    button:{
+        fontSize:16
+    }
 });

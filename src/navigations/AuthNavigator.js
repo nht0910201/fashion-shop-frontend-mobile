@@ -1,11 +1,13 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { main, white } from '../constants/colors';
-import { FORGOT_PASSWORD, HOME, LOGIN, REGISTER } from '../constants/routes';
+import { BOTTOM_TABS, CHANGE_PASSWORD, FORGOT_PASSWORD, HOME, LOGIN, REGISTER, VERIFY_REGISTER } from '../constants/routes';
 import Login from '../screens/Login';
 import Register from '../screens/Register';
 import BottomTabNavigator from './BottomTabNavigator';
 import ForgotPassword from '../screens/ForgotPassword';
+import ChangePassWord from '../screens/VerifyRegister';
+import VerifyRegister from '../screens/VerifyRegister';
 
 const Stack = createStackNavigator();
 
@@ -23,6 +25,7 @@ function AuthNavigator() {
             backgroundColor: main,
           },
           title: route.params.userId,
+          // headerShown:false
         })}
       />
       <Stack.Screen
@@ -44,8 +47,13 @@ function AuthNavigator() {
         }}
       />
       <Stack.Screen
-        name={HOME}
+        name={BOTTOM_TABS}
         component={BottomTabNavigator}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={VERIFY_REGISTER}
+        component={VerifyRegister}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>

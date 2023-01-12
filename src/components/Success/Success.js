@@ -1,9 +1,9 @@
 import { ALERT_TYPE, Dialog } from 'react-native-alert-notification';
 
-export const Error = (msg) => {
+export const Success = (title,msg) => {
     Dialog.show({
-        type: ALERT_TYPE.DANGER,
-        title: 'Đã có lỗi xảy ra',
+        type: ALERT_TYPE.SUCCESS,
+        title: title,
         textBody: msg,
         button: 'Đóng',
     })

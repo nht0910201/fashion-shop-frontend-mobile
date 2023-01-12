@@ -1,7 +1,9 @@
 import {StyleSheet, Text, View} from 'react-native';
 import React from 'react';
+import { useRoute } from '@react-navigation/native';
 
 const Home = () => {
+  const route = useRoute()
   return (
     <View
       style={{
@@ -10,6 +12,7 @@ const Home = () => {
         alignItems: 'center',
       }}>
       <Text>Home!</Text>
+      <Text>Id: {route.params?.id} </Text>
     </View>
   );
 };
