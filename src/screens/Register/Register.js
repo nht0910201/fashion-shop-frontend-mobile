@@ -100,6 +100,7 @@ function Register({ navigation }) {
         setConfirm(e)
     }
     const register = async ({ name, email, password, phone, province, district, ward, address, gender }) => {
+        
         let checkName = validator.isEmpty(name)
         let checkGender = validator.isEmpty(gender)
         let checkEmail = validator.isEmail(email)
@@ -312,8 +313,8 @@ function Register({ navigation }) {
                             <Button
                                 variant="solid"
                                 size={'lg'}
-                                // onPress={handleRegister}
-                                onPress={()=>navigation.navigate(VERIFY_REGISTER,{email:email})}
+                                onPress={handleRegister}
+                                // onPress={()=>navigation.navigate(VERIFY_REGISTER,{email:email})}
                                 bgColor={'#f5a524'}
                                 style={{ margin: 10, width: '98%', borderRadius: 55 }}
                             >

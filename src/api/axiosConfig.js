@@ -4,7 +4,7 @@ import { clearToken, getToken } from '../utils/tokenHandle';
 import { clearUser } from '../utils/userHandle';
 
 const axiosConfig = axios.create({
-    baseURL: API_HOST
+    baseURL: API_LOCAL
 });
 const axiosCountry = axios.create({
     baseURL:API_ADDRESS,

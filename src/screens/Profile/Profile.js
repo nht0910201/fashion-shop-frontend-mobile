@@ -1,4 +1,4 @@
-import { Avatar, Button, Input, NativeBaseProvider, Select, Stack } from 'native-base';
+import { Badge, Button, Input, NativeBaseProvider, Select, HStack, Stack, Image, Row } from 'native-base';
 import React from 'react';
 import { Text, SafeAreaView, ScrollView, View } from 'react-native';
 import { useDispatch } from 'react-redux';
@@ -9,11 +9,16 @@ import { getUser } from '../../utils/userHandle';
 import IconMUI from 'react-native-vector-icons/MaterialCommunityIcons'
 import IconFA from 'react-native-vector-icons/FontAwesome'
 import Loading from '../../components/Loading';
-import { getUserByID } from '../../services/UserService';
+import { getUserByID, updateUserByID } from '../../services/UserService';
 import { getDistrict, getProvince, getWard } from '../../services/AuthServices';
-import { main } from '../../constants/colors';
 import { styles } from './styles';
+import validator from 'validator';
 import ModalChangePass from './ModalChangePass';
+import ModalChangeAvatar from './ModalChangeAvatar';
+import Warning from '../../components/Warning';
+import Success from '../../components/Success';
+import Error from '../../components/Error';
+
 function Profile({ navigation }) {
     const [loading, setLoad] = useState(false)
     const [user, setUser] = useState()
@@ -87,6 +92,47 @@ function Profile({ navigation }) {
     const handleChangeGender = (e) => {
         setUser({ ...user, gender: e.toLowerCase() });
     };
+    const updateInfo = async (data, id) => {
+        let checkName = validator.isEmpty(user.name);
+        let checkPhone = validator.isMobilePhone(user.phone, 'vi-VN');
+        let checkProvince = user.province;
+        let checkDistrict = user.district;
+        let checkWard = user.ward;
+        let checkAddress = validator.isEmpty(user.address)
+        if (checkName) {
+            Warning('THÔNG TIN KHÔNG HỢP LỆ','Vui lòng nhập tên')
+        }
+        else if (!checkPhone) {
+            Warning('THÔNG TIN KHÔNG HỢP LỆ','Số điện thoại không hợp lệ. Vui lòng nhập lại')
+        }
+        else if (checkProvince === undefined) {
+            Warning('THÔNG TIN KHÔNG HỢP LỆ','Vui lòng chọn tỉnh/thành phố')
+        }
+        else if (checkDistrict === undefined) {
+            Warning('THÔNG TIN KHÔNG HỢP LỆ','Vui lòng chọn quận/huyện')
+        }
+        else if (checkWard === undefined) {
+            Warning('THÔNG TIN KHÔNG HỢP LỆ','Vui lòng chọn xã/phường ')
+        }
+        else if (checkAddress) {
+            Warning('THÔNG TIN KHÔNG HỢP LỆ','Vui lòng nhập địa chỉ')
+        }
+        else {
+            setLoad(true)
+            let res = await updateUserByID(data, id);
+            if (res.success) {
+                Success('CẬP NHẬT THÀNH CÔNG','Vui lòng nhấn OK')
+                setUser({ ...res.data, gender: res.data.gender.toLowerCase() });
+                setLoad(false)
+            } else {
+                Error('Cập nhật không thành công')
+                setLoad(false)
+            }
+        }
+    };
+    const handleSaveInfo = () => {
+        updateInfo(user, user?.id);
+    };
     const dispatch = useDispatch()
     const handleLogout = async () => {
         await dispatch(authAction.logout())
@@ -97,15 +143,16 @@ function Profile({ navigation }) {
             <Loading loading={loading} />
             <ScrollView style={styles.container}>
                 <View style={{ alignItems: 'center', marginVertical: 10 }}>
-                    <Avatar
-                        bg="amber.500"
-                        source={{ uri: user?.avatar }}
-                        size="2xl"
-                    >
-                        <Avatar.Badge bg="green.500" />
-                    </Avatar>
+                    <Badge>
+                        <Image size={130} borderRadius={100} source={{
+                            uri: user?.avatar
+                        }} alt="Avatar..." />
+                    </Badge>
                 </View>
                 <Stack space={2}>
+                    {/* <Button variant={'unstyled'} size={'xs'} leftIcon={<IconMUI name='camera-flip' size={30} />}>
+                    </Button> */}
+                    <ModalChangeAvatar user={user} />
                     <Input
                         variant={'rounded'}
                         style={{ margin: 5 }}
@@ -135,7 +182,7 @@ function Profile({ navigation }) {
                             endIcon: <IconMUI name="arrow-down-plus" size={5} />
                         }} mt={1}>
                         {provinces.map((province) => (
-                            <Select.Item key={province.ProvinceID} label={province.ProvinceName} value={province.ProvinceID} />
+                            <Select.Item key={province.ProvinceID} label={province.ProvinceName} value={+province.ProvinceID} />
                         ))}
 
                     </Select>
@@ -152,7 +199,7 @@ function Profile({ navigation }) {
                             endIcon: <IconMUI name="arrow-down-plus" size={5} />
                         }} mt={1}>
                         {districts.map((district) => (
-                            <Select.Item key={district.DistrictID} label={district.DistrictName} value={district.DistrictID} />
+                            <Select.Item key={+district.DistrictID} label={district.DistrictName} value={+district.DistrictID} />
                         ))}
                     </Select>
                     <Select
@@ -179,10 +226,10 @@ function Profile({ navigation }) {
                         value={user?.address}
                         onChangeText={handleChangeAddress}
                     />
-                    <ModalChangePass/>
-                    {/* <Button borderRadius={'3xl'} endIcon={<IconFA name="refresh" size={25} />} colorScheme={'blue'} size={'lg'}>
-                        Đổi mật khẩu
-                    </Button> */}
+                    <ModalChangePass id={user?.id} />
+                    <Button onPress={handleSaveInfo} borderRadius={'3xl'} colorScheme={'success'} size={'lg'}>
+                        Lưu
+                    </Button>
                     <Button onPress={handleLogout} borderRadius={'3xl'} endIcon={<IconMUI name="logout" size={25} />} colorScheme={'error'} size={'lg'}>
                         Đăng xuất
                     </Button>

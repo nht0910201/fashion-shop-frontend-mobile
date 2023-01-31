@@ -6,7 +6,6 @@ import Login from '../screens/Login';
 import Register from '../screens/Register';
 import BottomTabNavigator from './BottomTabNavigator';
 import ForgotPassword from '../screens/ForgotPassword';
-import ChangePassWord from '../screens/VerifyRegister';
 import VerifyRegister from '../screens/VerifyRegister';
 
 const Stack = createStackNavigator();

@@ -11,36 +11,36 @@ import { LOGIN } from "../../constants/routes";
 import Error from "../../components/Error";
 
 function VerifyRegister() {
-    const [loading,setLoad] = useState(false)
+    const [loading, setLoad] = useState(false)
     const naviagtion = useNavigation()
     const route = useRoute()
     let email = route.params.email
     let type = 'register'
-    const [otp,setOtp] = useState('')
+    const [otp, setOtp] = useState('')
     const handleChangeOTP = (e) => {
         setOtp(e)
     }
-    const verify = async ({otp,email,type}) => {
-        if(otp.length === 0){
-            Warning('THÔNG TIN KHÔNG HỢP LỆ','Vui lòng nhập mã xác thực được gửi về email bạn đã nhập')
-        }else{
+    const verify = async ({ otp, email, type }) => {
+        if (otp.length === 0) {
+            Warning('THÔNG TIN KHÔNG HỢP LỆ', 'Vui lòng nhập mã xác thực được gửi về email bạn đã nhập')
+        } else {
             setLoad(true)
-            const res = await verifyUser({otp,email,type})
-            if(res.data.success){
+            const res = await verifyUser({ otp, email, type })
+            if (res.data.success) {
                 setLoad(false)
-                SuccessNavigate('XÁC THỰC THÀNH CÔNG','Bạn đã có thể đăng nhập vào hệ thống',naviagtion,LOGIN)
-            }else{
+                SuccessNavigate('XÁC THỰC THÀNH CÔNG', 'Bạn đã có thể đăng nhập vào hệ thống', naviagtion, LOGIN)
+            } else {
                 setLoad(false)
                 Error('Đã xảy ra lỗi khi xác thực')
             }
-        } 
+        }
     }
     const handleVerify = () => {
-        verify({otp,email,type})
+        verify({ otp, email, type })
     }
     return (
         <NativeBaseProvider>
-            <Loading loading={loading}/>
+            <Loading loading={loading} />
             <AlertNotificationRoot>
                 <SafeAreaView style={styles.container}>
                     <View style={styles.content}>
@@ -49,7 +49,7 @@ function VerifyRegister() {
                             textAlign: 'center',
                             color: '#f5a524',
                             fontWeight: 'bold',
-                            marginBottom:30
+                            marginBottom: 30
                         }}>XÁC THỰC NGƯỜI DÙNG</Text>
                         <Input
                             placeholder="OTP"

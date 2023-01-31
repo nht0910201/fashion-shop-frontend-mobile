@@ -37,6 +37,7 @@ export const forgotPassword = async (data,id) =>{
 
 export const updateAvatarUserByID = async (data,id) =>{
     try{
+        
         const response = await postImage(`/users/avatar/${id}`,data);
         return response
     }catch(error){

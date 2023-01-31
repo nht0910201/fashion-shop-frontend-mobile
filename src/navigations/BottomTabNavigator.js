@@ -3,8 +3,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { HOME, PROFILE } from '../constants/routes';
 import Home from '../screens/Home';
 import Profile from '../screens/Profile';
-import HomeIcon from 'react-native-vector-icons/FontAwesome5'
-import UserIcon from 'react-native-vector-icons/FontAwesome5'
+import IconFA5 from 'react-native-vector-icons/FontAwesome5'
 import { TouchableOpacity } from 'react-native';
 import { useState, useEffect } from 'react';
 import { getUser } from '../utils/userHandle';
@@ -29,10 +28,19 @@ function BottomTabNavigator() {
             iconName = focused
               ? 'home'
               : 'home';
-            return <HomeIcon name={iconName} size={size} color={color} />;
-          } else if (route.name === 'Profile') {
+            return <IconFA5 name={iconName} size={size} color={color} />;
+          } 
+          // else if (route.name === 'Profile') {
+          //   iconName = focused ? 'shopping-bag' : 'shopping-bag';
+          //   return <IconFA5 name={iconName} size={size} color={color} />;
+          // }
+          // else if (route.name === 'Profile') {
+          //   iconName = focused ? 'receipt' : 'receipt';
+          //   return <IconFA5 name={iconName} size={size} color={color} />;
+          // }
+          else if (route.name === 'Profile') {
             iconName = focused ? 'user' : 'user';
-            return <UserIcon name={iconName} size={size} color={color} />;
+            return <IconFA5 name={iconName} size={size} color={color} />;
           }
         },
         tabBarActiveTintColor: 'tomato',
@@ -40,8 +48,8 @@ function BottomTabNavigator() {
         headerShown: true,
       })}
     >
-      <Tab.Screen name={HOME} component={Home} />
-      <Tab.Screen name={PROFILE} component={Profile} options={{}}
+      <Tab.Screen name={HOME} component={Home} options={{title:'Trang chủ',headerShown:false}}/>
+      <Tab.Screen name={PROFILE} component={Profile} options={{title:'Thông tin cá nhân'}}
       />
     </Tab.Navigator>
   );
