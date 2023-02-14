@@ -25,10 +25,8 @@ export default function ModalChangeAvatar({ user }) {
             setPreview(res.assets[0].uri)
         });
     }
-    // console.log('file: '+file)
     const updateAvatar = async () => {
         const data = new FormData();
-        // data.append('file', file)
         data.append('file', {
             uri: file.uri,
             type: file.type,
