@@ -128,11 +128,7 @@ function Login() {
                                 /> :
                                 <></>}
                             <TouchableOpacity
-                                onPress={() =>
-                                    navigation.navigate(FORGOT_PASSWORD, {
-                                        userId: 'X0001',
-                                    })
-                                }
+                                onPress={() => navigation.navigate(FORGOT_PASSWORD)}
                                 style={{ marginTop: 10 }}>
                                 <Text style={styles.forgotPassText}>Quên mật khẩu?</Text>
                             </TouchableOpacity>

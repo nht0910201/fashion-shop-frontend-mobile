@@ -25,8 +25,7 @@ function AuthNavigator() {
           headerStyle: {
             backgroundColor: main,
           },
-          title: route.params.userId,
-          // headerShown:false
+          title: 'Quên mật khẩu',
         })}
       />
       <Stack.Screen

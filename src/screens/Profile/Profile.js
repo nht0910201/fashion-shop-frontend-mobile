@@ -150,8 +150,6 @@ function Profile({ navigation }) {
                     </Badge>
                 </View>
                 <Stack space={2}>
-                    {/* <Button variant={'unstyled'} size={'xs'} leftIcon={<IconMUI name='camera-flip' size={30} />}>
-                    </Button> */}
                     <ModalChangeAvatar user={user} />
                     <Input
                         variant={'rounded'}
