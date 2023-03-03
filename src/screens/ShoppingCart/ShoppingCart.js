@@ -16,11 +16,14 @@ import Success from "../../components/Success";
 import Warning from "../../components/Warning";
 import Error from "../../components/Error";
 import { getUser } from '../../utils/userHandle'
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { MAKE_ORDER } from "../../constants/routes";
+import { RefreshControl } from "react-native";
 
 function ShoppingCart() {
     const navigation = useNavigation()
+    const route = useRoute()
+    const reload = route?.params?.refresh || false
     const [loading, setLoading] = useState(false)
     const formatPrice = (value) =>
         new Intl.NumberFormat('vi-VN', {
@@ -85,6 +88,7 @@ function ShoppingCart() {
     return (
         <NativeBaseProvider>
             <Loading loading={loading} />
+            <RefreshControl refreshing={reload}/>
             <ScrollView>
                 <HStack justifyContent={'space-between'}>
                     <Text style={{ fontSize: 18, color: 'black', padding: 10 }}>Giỏ hàng của bạn</Text>

@@ -37,13 +37,6 @@ export default function MenuCategories({ categories }) {
                         ))}
                     </VStack>
                 </Popover.Body>
-                <Popover.Footer justifyContent="flex-end">
-                    <Button.Group>
-                        <Button colorScheme="red" variant="ghost" onPress={() => setIsOpen(false)}>
-                            Đóng
-                        </Button>
-                    </Button.Group>
-                </Popover.Footer>
             </Popover.Content>
         </Popover>
     )

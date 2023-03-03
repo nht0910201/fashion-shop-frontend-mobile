@@ -36,9 +36,8 @@ export default function ModalChangeAvatar({ user }) {
         let res = await updateAvatarUserByID(data, user.id)
         if (res.data.success) {
             await AsyncStorage.setItem('avatar', JSON.stringify(res.data.data.avatar));
-            Success('CẬP NHẬT THÀNH CÔNG','Vui lòng nhấn OK')
+            Success('CẬP NHẬT THÀNH CÔNG','Vui lòng nhấn nút Lưu')
             setModalVisible(false)
-            navigate
             setLoad(false)
         } else {
             Error('Cập nhật ảnh đại diện thất bại')

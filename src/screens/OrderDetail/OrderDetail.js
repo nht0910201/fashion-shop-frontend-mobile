@@ -16,6 +16,7 @@ import { Badge, Card } from '@rneui/themed';
 import { FlatList } from 'react-native';
 import { View } from 'react-native';
 import Loading from '../../components/Loading';
+import Reviews from './Reviews';
 
 const state = {
     'enable': 'Hiện tại',
@@ -104,8 +105,10 @@ function OrderDetail() {
         let res = await finishOrder(id)
         if (res.success) {
             SuccessNavigate('Xác nhận đã nhận hàng thành công', 'Vui lòng nhấn OK', navigation, MY_ORDER)
+            setLoading(false)
         } else {
             Error('Xác nhận đã nhận hàng thất bại')
+            setLoading(false)
         }
 
     }
@@ -156,6 +159,11 @@ function OrderDetail() {
                                         <VStack alignItems={'flex-start'}>
                                             <Text style={{ color: 'red', fontSize: 20 }}>{formatPrice(item.subPrice)}</Text>
                                             <Text style={{ color: 'black', fontSize: 16, textDecorationLine: 'line-through' }}>{formatPrice(item.price * item.quantity)}</Text>
+                                            {order?.state === 'done' || order?.state === 'delivered' ?
+                                                <Reviews productId={item.id} productName={item.name} />
+                                                : <></>
+                                            }
+
                                         </VStack>
                                     </HStack>
                                 </Card>
@@ -198,36 +206,32 @@ function OrderDetail() {
                             <Text style={{ paddingHorizontal: 10, color: 'black', fontSize: 20, fontStyle: 'italic', fontWeight: 'bold' }}>{formatPrice(order.totalPrice + order.deliveryDetail?.deliveryInfo?.fee || order.totalPrice)}</Text>
                         </HStack>
                         <HStack justifyContent={'space-between'}>
-                            <HStack alignItems={'center'}>
-                                <Text style={{ paddingHorizontal: 10, color: 'black', fontSize: 18, fontWeight: 'bold' }}>Trạng thái:</Text>
-                                <Text
-                                    style={{
-                                        color: order?.state === 'enable' ? 'blue' :
-                                            order?.state === 'done' ? 'green' :
-                                                order?.state === 'process' ? 'orange' :
-                                                    order?.state === 'pending' ? 'orange' :
-                                                        order?.state === 'delivery' ? 'purple' :
-                                                            order?.state === 'delivered' ? 'green' :
-                                                                order?.state === 'prepare' ? 'orange' : 'red',
-                                        fontSize: 20,
-                                        fontStyle: 'italic',
-                                        fontWeight: 'bold',
-                                        paddingHorizontal: 10
-                                    }}
-                                >
-                                    {state[order?.state]}
-                                </Text>
-                            </HStack>
-                            <>
-                                {order?.state === '' ?
-                                    <Button style={{ marginTop: 10 }} variant={'solid'} colorScheme={'red'} size={'lg'} borderRadius={'2xl'}>Huỷ đơn hàng</Button>
-                                    : order?.state === 'delivered' ?
-                                        <Button style={{ marginTop: 10 }} variant={'solid'} colorScheme={'green'} size={'lg'} borderRadius={'2xl'}>Đã nhận hàng</Button>
-
-                                        : <></>
-                                }
-                            </>
-
+                            <Text style={{ paddingHorizontal: 10, color: 'black', fontSize: 18, fontWeight: 'bold' }}>Trạng thái:</Text>
+                            <Text
+                                style={{
+                                    color: order?.state === 'enable' ? 'blue' :
+                                        order?.state === 'done' ? 'green' :
+                                            order?.state === 'process' ? 'orange' :
+                                                order?.state === 'pending' ? 'orange' :
+                                                    order?.state === 'delivery' ? 'purple' :
+                                                        order?.state === 'delivered' ? 'green' :
+                                                            order?.state === 'prepare' ? 'orange' : 'red',
+                                    fontSize: 20,
+                                    fontStyle: 'italic',
+                                    fontWeight: 'bold',
+                                    paddingHorizontal: 10
+                                }}
+                            >
+                                {state[order?.state]}
+                            </Text>
+                        </HStack>
+                        <HStack justifyContent={'center'}>
+                            {order?.state === 'pending' ?
+                                <Button style={{ marginTop: 10 }} variant={'solid'} colorScheme={'red'} size={'lg'} borderRadius={'2xl'} onPress={handleCancel}>Huỷ đơn hàng</Button>
+                                : order?.state === 'delivered' ?
+                                    <Button style={{ marginTop: 10 }} variant={'solid'} colorScheme={'green'} size={'lg'} borderRadius={'2xl'} onPress={handleFinish}>Đã nhận hàng</Button>
+                                    : <></>
+                            }
                         </HStack>
                     </View>
                 </ScrollView>

@@ -29,7 +29,7 @@ import { useNavigation } from '@react-navigation/native';
 function Login() {
     const navigation = useNavigation()
     const dispatch = useDispatch()
-    const [loading,setLoad] = useState(false)
+    const [loading, setLoad] = useState(false)
     const [show, setShow] = useState(false);
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
@@ -58,7 +58,7 @@ function Login() {
                 } else {
                     await dispatch(authAction.login(res.data));
                     setLoad(false)
-                    SuccessNavigate('Đăng Nhập Thành Công', 'Vui lòng nhấn OK', navigation, BOTTOM_TABS)
+                    navigation.navigate(BOTTOM_TABS)
                 }
             }
         }
@@ -81,7 +81,7 @@ function Login() {
     }
     return (
         <NativeBaseProvider>
-            <Loading loading={loading}/>
+            <Loading loading={loading} />
             <AlertNotificationRoot>
                 <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
                     <SafeAreaView style={styles.container}>
@@ -116,6 +116,15 @@ function Login() {
                                 value={password}
                                 onChangeText={handleChangePassword}
                             />
+                            {/* <Input
+                                InputLeftElement={<IconMUI name="verified" size={25} style={{ marginLeft: 10, padding: 5 }} color="muted.400" />}
+                                placeholder="OTP"
+                                value={otpInput.otp}
+                                onChangeText={onChangeOtpHandle}
+                                variant={'rounded'}
+                                size={'2xl'}
+                                style={{ margin: 5 }}
+                            /> */}
                             {!otpInput.hidden ?
                                 <Input
                                     InputLeftElement={<IconMUI name="verified" size={25} style={{ marginLeft: 10, padding: 5 }} color="muted.400" />}
@@ -156,7 +165,7 @@ function Login() {
                                     <Text style={styles.signupBtn}>Đăng ký</Text>
                                 </TouchableOpacity>
                             </View>
-                            <Stack direction={{
+                            {/* <Stack direction={{
                                 base: "row",
                             }} space={1}>
                                 <Button borderRadius={'3xl'} leftIcon={<IconFA name="google" size={25} />} colorScheme={'error'} size={'lg'}>
@@ -165,7 +174,7 @@ function Login() {
                                 <Button borderRadius={'3xl'} leftIcon={<IconFA name="facebook-square" size={25} />} colorScheme={'darkBlue'} size={'lg'}>
                                     Tiếp tục với Facebook
                                 </Button>
-                            </Stack>
+                            </Stack> */}
                         </View>
                     </SafeAreaView>
                 </KeyboardAvoidingView>

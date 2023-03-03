@@ -151,10 +151,10 @@ const Home = () => {
           <FlatList
             data={loadMore1 ? hotProduct : hotProduct.slice(0, 4)}
             renderItem={({ item }) =>
-              <Card>
+              <Card key={item.id}>
                 <Card.Title onPress={() => navigation.navigate(PRODUCT_DETAIL, { productId: item.id })} style={{ fontSize: 18 }}>{item.name}</Card.Title>
                 <Card.Divider />
-                <Badge value={item.discount > 0 ? -item.discount + '%' : ''} badgeStyle={item.discount > 0 ? { marginBottom: 8 } : {}} status={item.discount > 0 ? 'error' : ''} />
+                <Badge value={item.discount > 0 ? -item.discount + '%' : ''} badgeStyle={item.discount > 0 ? { marginBottom: 8,width: 50, height: 30} : {}} status={item.discount > 0 ? 'error' : ''} />
                 <Card.Image
                   style={{ padding: 0 }}
                   source={{
@@ -210,6 +210,7 @@ const Home = () => {
               <Card key={item.id}>
                 <Card.Title onPress={() => navigation.navigate(PRODUCT_DETAIL, { productId: item.id })} style={{ fontSize: 18 }}>{item.name}</Card.Title>
                 <Card.Divider />
+                <Badge value={item.discount > 0 ? -item.discount + '%' : ''} badgeStyle={item.discount > 0 ? { marginBottom: 8,width: 50, height: 30} : {}} status={item.discount > 0 ? 'error' : ''} />
                 <Card.Image
                   style={{ padding: 0 }}
                   source={{

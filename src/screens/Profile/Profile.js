@@ -228,7 +228,7 @@ function Profile({ navigation }) {
                     <Button onPress={handleSaveInfo} borderRadius={'3xl'} colorScheme={'success'} size={'lg'}>
                         Lưu
                     </Button>
-                    <Button onPress={handleLogout} borderRadius={'3xl'} endIcon={<IconMUI name="logout" size={25} />} colorScheme={'error'} size={'lg'}>
+                    <Button style={{marginBottom:5}} onPress={handleLogout} borderRadius={'3xl'} endIcon={<IconMUI name="logout" size={25} />} colorScheme={'error'} size={'lg'}>
                         Đăng xuất
                     </Button>
                 </Stack>

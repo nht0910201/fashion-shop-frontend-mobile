@@ -1,5 +1,5 @@
 import React from "react";
-import { Text } from "react-native";
+import { Linking, Text } from "react-native";
 import { ScrollView } from "react-native";
 import "intl";
 import "intl/locale-data/jsonp/en";
@@ -22,7 +22,8 @@ import Warning from "../../components/Warning";
 import Error from "../../components/Error";
 import { makeAnOrder } from "../../services/Payment";
 import SuccessNavigate from "../../components/SuccessNavigate";
-import { ORDER_SUCCESS } from "../../constants/routes";
+import { ORDER_SUCCESS, SHOPPING_CART } from "../../constants/routes";
+import { ALERT_TYPE, Dialog } from 'react-native-alert-notification';
 
 function Order() {
     let navigation = useNavigation();
@@ -170,28 +171,29 @@ function Order() {
         setUser({ ...user, address: e });
     };
     const [paymentType, setPaymentType] = useState('cod');
+    const [redURL, setURL] = useState('')
     const makeOrder = async (paymentType, orderId, user) => {
         if (validator.isEmpty(user.name)) {
-            Warning('Vui lòng nhập tên người nhận hàng','Vui lòng nhấn OK')
+            Warning('Vui lòng nhập tên người nhận hàng', 'Vui lòng nhấn OK')
         }
         else if (!validator.isEmail(user.email)) {
-           Error('Email không hợp lệ','Nhấn OK và nhập lại email')
+            Error('Email không hợp lệ', 'Nhấn OK và nhập lại email')
         }
         else if (!validator.isMobilePhone(user.phone, 'vi-VN')) {
-            Error('Số điện thoại không hợp lệ','Nhấn OK và nhập lại số điện thoại')
+            Error('Số điện thoại không hợp lệ', 'Nhấn OK và nhập lại số điện thoại')
         }
         else if (province === undefined) {
-            Warning('Vui lòng chọn tỉnh/thành phố','Vui lòng nhấn OK')
+            Warning('Vui lòng chọn tỉnh/thành phố', 'Vui lòng nhấn OK')
         }
         else if (district === undefined) {
-            Warning('Vui lòng chọn quận/huyện phố','Vui lòng nhấn OK')
+            Warning('Vui lòng chọn quận/huyện phố', 'Vui lòng nhấn OK')
         } else if (ward === undefined) {
-            Warning('Vui lòng chọn xã/phường phố','Vui lòng nhấn OK')
+            Warning('Vui lòng chọn xã/phường phố', 'Vui lòng nhấn OK')
         } else if (serviceType === undefined) {
-            Warning('Vui lòng chọn tỉnh/thành phố','Vui lòng nhấn OK')
+            Warning('Vui lòng chọn tỉnh/thành phố', 'Vui lòng nhấn OK')
         }
         else if (validator.isEmpty(user.address)) {
-            Warning('Vui lòng chọn tỉnh/thành phố','Vui lòng nhấn OK')
+            Warning('Vui lòng chọn tỉnh/thành phố', 'Vui lòng nhấn OK')
         }
         else {
             setLoading(true)
@@ -202,12 +204,19 @@ function Order() {
             if (res.data.success) {
                 if (paymentType === 'cod') {
                     setLoading(false)
-                    SuccessNavigate('Đặt hàng thành công','Vui lòng nhấn OK',navigation,ORDER_SUCCESS)
+                    // SuccessNavigate('Đặt hàng thành công', 'Vui lòng nhấn OK', navigation, SHOPPING_CART)
                     // window.location.href = '/redirect/payment?success=true&cancel=false'
-
+                    Dialog.show({
+                        type: ALERT_TYPE.SUCCESS,
+                        title: 'Đặt hàng thành công',
+                        textBody: 'Vui lòng nhấn OK',
+                        button: 'OK',
+                        onPressButton: () => { navigation.navigate(SHOPPING_CART,{refresh:true}) }
+                    })
                 } else {
+                    setURL(res.data.data)
                     setLoading(false)
-                    window.location.href = res.data.data;
+
                 }
             } else {
                 if (res.data.status === 409) {
@@ -378,23 +387,20 @@ function Order() {
                                     <Image source={{
                                         uri: "https://img.freepik.com/premium-vector/cash-delivery_569841-162.jpg?w=2000"
                                     }} alt="COD" size="sm" />
-                                    {/* <Spacer/> */}
                                     Thanh toán khi nhận hàng
                                 </Radio>
-                                <Radio colorScheme={'yellow'} value={'vnpay'} isInvalid size={'lg'}>
+                                {/* <Radio colorScheme={'yellow'} value={'vnpay'} isInvalid size={'lg'}>
                                     <Image source={{
                                         uri: "https://doanhnghiep.quocgiakhoinghiep.vn/wp-content/uploads/2020/07/1581089357407-1580819448160-vnpay.png"
                                     }} alt="VN-PAY" size="sm" />
-                                    {/* <Spacer/> */}
                                     VN-PAY
                                 </Radio>
                                 <Radio colorScheme={'yellow'} value={'paypal'} isInvalid size={'lg'}>
                                     <Image source={{
                                         uri: "https://www.paypalobjects.com/webstatic/icon/pp258.png"
                                     }} alt="PAYPAL" size="sm" />
-                                    {/* <Spacer/> */}
                                     PAYPAL
-                                </Radio>
+                                </Radio> */}
                             </VStack>
                         </Radio.Group>
                         <Button onPress={handleClickOrder} variant={'solid'} colorScheme={'yellow'} size={'lg'} borderRadius={'3xl'}>

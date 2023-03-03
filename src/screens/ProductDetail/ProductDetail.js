@@ -96,7 +96,7 @@ function ProductDetail() {
     }
     const quantity = 1;
     const addToCart = async ({ productOptionId, color, quantity }) => {
-        
+        console.log(1)
         if (userCur?.id !== undefined) {
             setLoading(true)
             let res = await addProductToCart({ productOptionId, color, quantity });
@@ -220,7 +220,7 @@ function ProductDetail() {
                 }
                 <HStack style={{ paddingRight: 10 }} justifyContent={'space-between'} alignItems={'center'}>
                     <Text style={{ paddingHorizontal: 10, paddingTop: 10, paddingBottom: 5, fontSize: 16, fontWeight: 'bold', color: 'black' }}>Đánh giá sản phẩm </Text>
-                    <Reviews productId={productId}/>
+                    {/* <Reviews productId={productId}/> */}
                 </HStack>
                 {reviews?.list?.length !== 0 ?
                     <Box borderBottomWidth="1" _dark={{

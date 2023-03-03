@@ -14,6 +14,7 @@ export const styles = StyleSheet.create({
         flex:1,
         justifyContent:'center',
         alignItems:'center',
+        marginTop:20
     },
     content:{
         flex:3,
@@ -24,7 +25,7 @@ export const styles = StyleSheet.create({
         flex:3,
         justifyContent:'center',
         alignItems:'center',
-        marginTop:4
+        marginTop:200
     },
     loginContinueTxt: {
         fontSize: 28,
