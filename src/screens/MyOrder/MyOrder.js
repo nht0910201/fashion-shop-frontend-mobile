@@ -103,7 +103,7 @@ function MyOrder() {
                         <Popover
                             placement={'bottom right'} trigger={triggerProps => {
                                 return <Button variant={'outline'} alignSelf="center" {...triggerProps} onPress={() => setIsOpen1(true)}>
-                                    <IconMUI name="filter-menu" size={25} />
+                                    <IconMUI name="filter-menu" size={25} color={'black'}/>
                                 </Button>;
                             }} isOpen={isOpen1} onClose={() => setIsOpen1(!isOpen1)}>
                             <Popover.Content w="56">

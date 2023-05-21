@@ -14,6 +14,7 @@ import "intl";
 import "intl/locale-data/jsonp/en";
 import { useNavigation } from '@react-navigation/native';
 import { PRODUCT_DETAIL, PRODUCT_LIST } from '../../constants/routes';
+import { getRecommendProducts } from '../../services/UserService';
 
 const width = Dimensions.get('window').width;
 const slider = [
@@ -28,7 +29,7 @@ const slider = [
 const Home = () => {
   const navigation = useNavigation()
   const [loading, setLoading] = useState(false)
-  const [search,setSearch] = useState('')
+  const [search, setSearch] = useState('')
   const handleSearchChange = (e) => {
     setSearch(e)
   }
@@ -40,6 +41,7 @@ const Home = () => {
     }).format(value);
   const [hotProduct, setHotProduct] = useState([]);
   const [newProduct, setNewProduct] = useState([]);
+  const [recommends, setRecommends] = useState([]);
   const [loadMore1, setLoadMore1] = useState(false);
   const handleLoadMore1 = () => {
     setLoadMore1(!loadMore1);
@@ -47,6 +49,10 @@ const Home = () => {
   const [loadMore2, setLoadMore2] = useState(false);
   const handleLoadMore2 = () => {
     setLoadMore2(!loadMore2);
+  };
+  const [loadMore3, setLoadMore3] = useState(false);
+  const handleLoadMore3 = () => {
+    setLoadMore3(!loadMore3);
   };
   useEffect(() => {
     async function getCategories() {
@@ -57,18 +63,20 @@ const Home = () => {
       }
     }
     async function getHotProduct() {
-      let [resHot, resNew] = await Promise.all([
+      let [resHot, resNew, recommend] = await Promise.all([
         getSortProducts('discount,desc'),
         getSortProducts('createdDate,desc'),
+        getRecommendProducts()
       ]);
       if (resHot.success && resNew.success) {
         setHotProduct(resHot.data.list);
         setNewProduct(resNew.data.list);
+        setRecommends(recommend.data)
         setLoading(false)
       }
     }
+    getCategories();
     getHotProduct();
-    getCategories()
   }, []);
   return (
     <NativeBaseProvider>
@@ -100,8 +108,8 @@ const Home = () => {
             leftIcon={<IconFA5 name="search" size={20} />}
             colorScheme={'black'}
             size={'md'}
-            onPress={()=>navigation.navigate(PRODUCT_LIST,{find:true,search:search})}
-            >
+            onPress={() => navigation.navigate(PRODUCT_LIST, { find: true, search: search })}
+          >
           </Button>}
         />
         <View style={{ marginTop: 0 }}>
@@ -125,7 +133,7 @@ const Home = () => {
                   'https://file.hstatic.net/1000184601/file/banner-chang-trai-phong-cach-2_3ab47ea32b494c49b31a4213620efafa.jpg',
               }}
             />
-            <Button onPress={() => navigation.navigate(PRODUCT_LIST, { catId: '630f3e661fbd7419759f5d71',catName:'Áo' })} borderRadius={'3xl'} colorScheme={'blue'} te size={'md'}>
+            <Button onPress={() => navigation.navigate(PRODUCT_LIST, { catId: '630f3e661fbd7419759f5d71', catName: 'Áo' })} borderRadius={'3xl'} colorScheme={'blue'} te size={'md'}>
               Xem ngay !
             </Button>
           </Card>
@@ -139,7 +147,7 @@ const Home = () => {
                   'https://file.hstatic.net/1000184601/file/banner-chang-trai-phong-cach_4442b04c22a9445b8f12212386978bda.jpg',
               }}
             />
-            <Button onPress={() => navigation.navigate(PRODUCT_LIST, { catId: '630f3e9d1fbd7419759f5d73',catName:'Quần' })} borderRadius={'3xl'} colorScheme={'blue'} te size={'md'}>
+            <Button onPress={() => navigation.navigate(PRODUCT_LIST, { catId: '630f3e9d1fbd7419759f5d73', catName: 'Quần' })} borderRadius={'3xl'} colorScheme={'blue'} te size={'md'}>
               Xem ngay !
             </Button>
           </Card>
@@ -154,7 +162,7 @@ const Home = () => {
               <Card key={item.id}>
                 <Card.Title onPress={() => navigation.navigate(PRODUCT_DETAIL, { productId: item.id })} style={{ fontSize: 18 }}>{item.name}</Card.Title>
                 <Card.Divider />
-                <Badge value={item.discount > 0 ? -item.discount + '%' : ''} badgeStyle={item.discount > 0 ? { marginBottom: 8,width: 50, height: 30} : {}} status={item.discount > 0 ? 'error' : ''} />
+                <Badge value={item.discount > 0 ? -item.discount + '%' : ''} badgeStyle={item.discount > 0 ? { marginBottom: 8, width: 50, height: 30 } : {}} status={item.discount > 0 ? 'error' : ''} />
                 <Card.Image
                   style={{ padding: 0 }}
                   source={{
@@ -210,7 +218,7 @@ const Home = () => {
               <Card key={item.id}>
                 <Card.Title onPress={() => navigation.navigate(PRODUCT_DETAIL, { productId: item.id })} style={{ fontSize: 18 }}>{item.name}</Card.Title>
                 <Card.Divider />
-                <Badge value={item.discount > 0 ? -item.discount + '%' : ''} badgeStyle={item.discount > 0 ? { marginBottom: 8,width: 50, height: 30} : {}} status={item.discount > 0 ? 'error' : ''} />
+                <Badge value={item.discount > 0 ? -item.discount + '%' : ''} badgeStyle={item.discount > 0 ? { marginBottom: 8, width: 50, height: 30 } : {}} status={item.discount > 0 ? 'error' : ''} />
                 <Card.Image
                   style={{ padding: 0 }}
                   source={{
@@ -255,6 +263,61 @@ const Home = () => {
             {loadMore2 ? 'Thu gọn' : 'Xem thêm...'}
           </Button>
         </Box>
+        <Box>
+            <Heading fontSize="2xl" p="4" pb="3" style={{ textAlign: 'center' }}>
+              SẢN PHẨM GỢI Ý CHO BẠN
+            </Heading>
+            <FlatList
+              data={loadMore3 ? recommends : recommends.slice(0, 4)}
+              renderItem={({ item }) =>
+                <Card key={item.id}>
+                  <Card.Title onPress={() => navigation.navigate(PRODUCT_DETAIL, { productId: item.id })} style={{ fontSize: 18 }}>{item.name}</Card.Title>
+                  <Card.Divider />
+                  <Badge value={item.discount > 0 ? -item.discount + '%' : ''} badgeStyle={item.discount > 0 ? { marginBottom: 8, width: 50, height: 30 } : {}} status={item.discount > 0 ? 'error' : ''} />
+                  <Card.Image
+                    style={{ padding: 0 }}
+                    source={{
+                      uri:
+                        item.images[0]?.url
+                    }}
+                    onPress={() => navigation.navigate(PRODUCT_DETAIL, { productId: item.id })}
+                  />
+                  <HStack justifyContent={'space-between'}>
+                    <Text style={{ fontSize: 18, marginBottom: 10, textDecorationLine: 'line-through' }}>
+                      {item.discount > 0 ? formatPrice(item.price) : ''}
+                    </Text>
+                    <Text style={{ fontSize: 18, color: 'red', marginBottom: 10 }}>
+                      {formatPrice(item.discountPrice)}
+                    </Text>
+                  </HStack>
+                  <HStack justifyContent={'space-between'}>
+                    <HStack>
+                      {item.images.map((image) => (
+                        <Badge
+                          badgeStyle={{
+                            width: 20,
+                            height: 20,
+                            backgroundColor: image.color,
+                            borderColor: image.color === '#ffffff' ? 'black' : '',
+                            borderStyle: 'solid',
+                            borderWidth: 1,
+                            marginRight: 3,
+                          }}
+                        ></Badge>
+                      ))}
+                    </HStack>
+                    <Text style={{ fontSize: 16 }}>
+                      {item.rate <= 0 ? 'Chưa có đánh giá' : <>{item.rate}<Ionicons name='star' size={18} color={'black'} /></>}
+                    </Text>
+                  </HStack>
+                </Card>
+              }
+              keyExtractor={item => item.id}
+            />
+            <Button size={'lg'} variant={'unstyled'} onPress={handleLoadMore3}>
+              {loadMore3 ? 'Thu gọn' : 'Xem thêm...'}
+            </Button>
+          </Box>
       </ScrollView>
     </NativeBaseProvider>
 

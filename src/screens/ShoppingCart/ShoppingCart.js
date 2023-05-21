@@ -1,5 +1,5 @@
 import React from "react";
-import { Text } from "react-native";
+import { Linking, Text } from "react-native";
 import { ScrollView } from "react-native";
 import "intl";
 import "intl/locale-data/jsonp/en";
@@ -16,7 +16,7 @@ import Success from "../../components/Success";
 import Warning from "../../components/Warning";
 import Error from "../../components/Error";
 import { getUser } from '../../utils/userHandle'
-import { useNavigation, useRoute } from '@react-navigation/native';
+import { Link, useNavigation, useRoute } from '@react-navigation/native';
 import { MAKE_ORDER } from "../../constants/routes";
 import { RefreshControl } from "react-native";
 
